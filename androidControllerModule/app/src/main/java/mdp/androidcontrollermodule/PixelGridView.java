@@ -16,8 +16,6 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import java.util.ArrayList;
 
-import static mdp.androidcontrollermodule.R.string.arena;
-
 /**
  * Created by shelinalusandro on 2/9/17.
  */
@@ -70,14 +68,11 @@ public class PixelGridView extends View {
 
     private boolean enableClick = false;
 
-    public PixelGridView(ArenaActivity arena, Context context) {
-        this(arena, context, null);
+    public PixelGridView(Context context) {this(context, null);
     }
 
-    public PixelGridView(ArenaActivity arena, Context context, AttributeSet attrs) {
+    public PixelGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        this.arena = arena;
 
         SGD = new ScaleGestureDetector(context, new ScaleListener());
         blackPaint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -232,17 +227,17 @@ public class PixelGridView extends View {
                             builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     if (type == "startpoint") {
-                                        startpoint=point;
-                                        startclick=false;
+                                        ArenaActivity.getInstance().startclick=false;
+                                        ArenaActivity.getInstance().startpoint="startpoint="+point;
                                         setEnabledPGV(false);
-                                        arena.sendMessage("startpoint="+point);
+                                        //ArenaActivity.getInstance().sendMessage("startpoint="+point);
                                         System.out.println("Startpoint received! " + point);
                                         setCoordinates(row,column);
                                     } else if (type == "waypoint") {
-                                        waypoint=point;
-                                        waypointclick=false;
+                                        ArenaActivity.getInstance().waypointclick=false;
+                                        ArenaActivity.getInstance().waypoint="waypoint="+point;
                                         setEnabledPGV(false);
-                                        arena.sendMessage("waypoint="+point);
+                                        //ArenaActivity.getInstance().sendMessage("waypoint="+point);
                                         System.out.println("Waypoint received! " + point);
                                         setCoordinates(row,column);
                                     }
@@ -399,7 +394,6 @@ public class PixelGridView extends View {
 //	                	canvas.drawRect(rect, blackPaint);
 //                      rectangles.add(rect);
 //	                } else if (cellType[i][j] == 4) {
-//                      //explored
 //	                	//green
 //                      Rect rect = new Rect(j * cellWidth, i * cellHeight, (j + 1) * cellWidth, (i + 1) * cellHeight);
 //	                	canvas.drawRect(rect, greenPaint);
@@ -946,10 +940,10 @@ public class PixelGridView extends View {
         String mapFilter = map.replaceAll(" ", "");
         //String mapFilter = map.replaceAll(",", "");
 
-        for (int i = numRows; i > 0; i--) {
+        for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numColumns; j++) {
                 if (mapFilter.length() != 0) {
-                    cellType[j][i] = Integer.parseInt(mapFilter.substring(0,1));
+                    cellType[i][j] = Integer.parseInt(mapFilter.substring(0,1));
                     mapFilter = mapFilter.substring(1);
                 }
             }

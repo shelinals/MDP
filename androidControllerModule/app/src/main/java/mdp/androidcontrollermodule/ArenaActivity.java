@@ -29,8 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import static android.icu.util.GregorianCalendar.BC;
-
 public class ArenaActivity extends Activity implements SensorEventListener {
 
     //MISSING IMPLEMENTATION
@@ -38,6 +36,8 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     //STOPPING
     //ENABLE WAYPOINT AND ROBOTSTART CLICK - check
     //Sensor?
+
+    static ArenaActivity arena;
 
     // Debugging
     private static final String TAG = "BluetoothChat";
@@ -88,6 +88,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     private Sensor mSensor;
     boolean flag = false;
     boolean flag2 = false;
+
     String startpoint = null;
     String waypoint = null;
     boolean startclick = true;
@@ -130,6 +131,8 @@ public class ArenaActivity extends Activity implements SensorEventListener {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
 
+        arena = this;
+
         setContentView(R.layout.activity_arena);
         //img = (ImageView)findViewById(R.id.pixelGridView);
         //SGD = new ScaleGestureDetector(this,new ScaleListener());
@@ -149,7 +152,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
 
 //        Intent intent = new Intent(this, DeviceListActivity.class);
 //        startActivityForResult(intent, 1);
-        pgv = new PixelGridView(ArenaActivity.this,getApplicationContext());
+
         pgv = (PixelGridView) findViewById(R.id.pixelGridView);
 
         tvStatus = (TextView) findViewById(R.id.tv_status_text_box);
@@ -278,6 +281,9 @@ public class ArenaActivity extends Activity implements SensorEventListener {
 //        if(D) Log.e(TAG, "--- ON DESTROY ---");
 //    }
 
+    public static ArenaActivity getInstance(){
+        return arena;
+    }
 
     private final void setStatus(int resId) {
         final ActionBar actionBar = getActionBar();
@@ -463,7 +469,6 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     //Set the Robot Start Coordinate
     public void onBtnRobotStart(View view)
     {
-        startclick = pgv.getStartClick();
         if(startclick == true){
             pgv.setEnabledPGV(true);
             pgv.setType("startpoint");
@@ -481,7 +486,6 @@ public class ArenaActivity extends Activity implements SensorEventListener {
     //Set the Waypoint Coordinate
     public void onBtnWaypoint(View view)
     {
-        waypointclick = pgv.getWaypointClick();
         if(waypointclick == true){
             pgv.setEnabledPGV(true);
             pgv.setType("waypoint");
@@ -587,7 +591,7 @@ public class ArenaActivity extends Activity implements SensorEventListener {
 
     public void onBtnStopPressed(View view) {
         timerHandler.removeCallbacks(timerRunnable);
-//        sendMessage("p0");
+//        sendMessage("pstop");
         btnStart.setEnabled(true);
         btnStop.setEnabled(false);
     }
